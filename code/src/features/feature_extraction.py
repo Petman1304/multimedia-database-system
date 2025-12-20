@@ -18,6 +18,9 @@ def img_to_hu_moments(rgb_image):
                                cv2.RETR_EXTERNAL,
                                cv2.CHAIN_APPROX_SIMPLE)
     
+    if len(contours) == 0:
+        return np.zeros(7, dtype=np.float32)
+    
     contours = max(contours, key=cv2.contourArea)
     
     # Calculate Hu Moments
@@ -61,7 +64,7 @@ def img_to_hist(rgb_image, bins=8):
     vector = np.concatenate([red, green, blue, hue, saturation, value], axis=0)
     vector = vector.reshape(-1)
 
-    return np.linalg.norm(vector)
+    return vector / np.linalg.norm(vector)
 
 def img_feature_extraction (img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -76,15 +79,23 @@ def img_feature_extraction (img):
     hu_moment *= w_hu
 
     vector = np.concatenate([hist, hu_moment])
+
+    vector = vector / np.linalg.norm(vector)
     
-    return vector / np.linalg.norm(vector)
+    return np.array(vector, dtype=np.float32)
 
-def get_image_metadata(image):
-    img = cv2.imread(image)
+def get_image_metadata(image_path): 
+    img = cv2.imread(image_path)
 
-    filename = os.path.basename(image)
+    filename = os.path.basename(image_path)
+
+    size = img.nbytes
+
+    _, ext = os.path.splitext(filename)
+    format = ext.lower().replace('.', '')
+
     height, width, channels = img.shape
-    return filename, height, width, channels
+    return filename, size, height, width, channels, format
 
 def extract_keyframes(video_path):
     keyframes = []
@@ -103,10 +114,10 @@ def extract_keyframes(video_path):
 
     return keyframes
 
-def get_video_metadata(video):
+def get_video_metadata(video_path):
     try:
-        with av.open(video) as container:
-            filename = os.path.basename(video)
+        with av.open(video_path) as container:
+            filename = os.path.basename(video_path)
             duration = float(container.duration / av.time_base) if container.duration else 0.
             file_size = container.size
 
