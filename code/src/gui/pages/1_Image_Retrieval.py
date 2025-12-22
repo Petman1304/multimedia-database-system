@@ -5,12 +5,13 @@ import numpy as np
 import streamlit as st
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT))
+
 from features.feature_extraction import *
 from retrieval.search import *
 from util.retriever import Retriever
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.append(str(ROOT))
 
 @st.cache_resource
 def get_db():
