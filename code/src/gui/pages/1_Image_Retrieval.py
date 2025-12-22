@@ -60,7 +60,7 @@ if uploaded:
 
     if st.button("Search"):
         results = retriever.image_similarity_search(query_img, top_k)
-        results = retriever.fetch_image_from_db(results, base_dir)
+        results = retriever.fetch_image_from_db(results)
         # results = image_similarity_search(db, query_img, top_k)
         # results = fetch_image_from_db(db, results)
 
