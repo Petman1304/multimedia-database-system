@@ -39,7 +39,7 @@ st.title("Image Retrieval System")
 
 db_path = r"..\..\..\..\database\image_file\africans\0.jpg"
 db_path = db_path.replace("\\", "/")
-img_path = os.path.normpath(os.path.join(os.getcwd(), db_path))
+img_path = os.path.normpath(os.path.join(os.path.dirname(__file__), db_path))
 st.image(img_path)
 
 
