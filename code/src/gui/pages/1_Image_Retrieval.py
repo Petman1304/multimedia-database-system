@@ -33,7 +33,9 @@ paths = cursor.execute(
     "SELECT filepath FROM media"
 )
 
-st.write(str(paths.fetchone))
+paths = [row for row in paths.fetchall()]
+
+st.write(str(paths))
 
 
 uploaded = st.file_uploader(
