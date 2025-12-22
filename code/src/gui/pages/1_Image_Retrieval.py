@@ -37,10 +37,10 @@ st.title("Image Retrieval System")
 
 # st.write(str(paths))
 
-base_dir = os.path.join(os.path.dirname(__file__), "../../database/image_file/africans")
-image_path = os.path.join(base_dir, "0.jpg")
-
-st.image(image_path)
+db_path = r"..\..\database\image_file\africans\0.jpg"
+db_path = db_path.replace("\\", "/")
+img_path = os.path.normpath(os.path.join(os.getcwd(), db_path))
+st.image(img_path)
 
 
 uploaded = st.file_uploader(
