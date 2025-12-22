@@ -37,7 +37,7 @@ st.title("Image Retrieval System")
 
 # st.write(str(paths))
 
-st.image("..\..\database\image_file\africans\0.jpg")
+st.image(r"..\..\database\image_file\africans\0.jpg")
 
 
 uploaded = st.file_uploader(
