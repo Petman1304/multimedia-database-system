@@ -3,10 +3,38 @@ import cv2
 import numpy as np
 import math
 import os
+from skimage import img_as_ubyte
+from skimage.feature import local_binary_pattern, hog
+from skimage.filters import roberts, sobel
+from skimage.filters.rank import entropy
+from skimage.morphology import disk
+from skimage.color import rgb2lab, rgb2gray
 
 
 
-def img_to_hu_moments(rgb_image):
+def img_to_lbp(rgb_image):
+    gray = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
+    lbp = local_binary_pattern(gray, 24, 3, method='uniform')
+    n_bins = int(lbp.max() + 1)
+    hist,_ = np.histogram(lbp, n_bins, range=(0, n_bins))
+    hist = np.array(hist, np.float64)
+    hist /= (hist.sum() + 1e-6)
+    return hist
+
+def img_to_hog(rgb_image):
+    gray = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
+    features = hog(
+        gray,
+        orientations=9,
+        pixels_per_cell=(16, 16),
+        cells_per_block=(2, 2),
+        block_norm="L2-Hys",
+        visualize=False
+    )
+
+    return features
+
+# def img_to_hu_moments(rgb_image):
     # Convert rgb image to grayscale
     img = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
 
@@ -64,25 +92,49 @@ def img_to_hist(rgb_image, bins=8):
     vector = np.concatenate([red, green, blue, hue, saturation, value], axis=0)
     vector = vector.reshape(-1)
 
-    return vector / np.linalg.norm(vector)
+    return vector / (vector.sum() + 1e-6)
 
 def img_feature_extraction (img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (128, 128))
 
-    w_hist = math.sqrt(7/48)
-    w_hu = 1.
+    LAB_img = rgb2lab(img)
+    A_img = LAB_img[:,:,1]
+    A_feat = A_img.mean()
 
-    hu_moment = img_to_hu_moments(img)
-    hist = img_to_hist(img)
+    B_img = LAB_img[:,:,2]
+    B_feat = B_img.mean()
 
-    hist *= w_hist
-    hu_moment *= w_hu
+    gray = rgb2gray(img)
+    gray = img_as_ubyte(gray)
 
-    vector = np.concatenate([hist, hu_moment])
+    ent = entropy(gray, disk(3))
+    ent_mean = ent.mean()
+    ent_std = ent.std()
 
-    vector = vector / np.linalg.norm(vector)
+    rob = roberts(gray)
+    rob_mean = rob.mean()
+
+    sob = sobel(gray)
+    sob_mean = sob.mean()
+
+    #Gabor 1
+    kernel1 = cv2.getGaborKernel((9, 9), 3, np.pi/4, np.pi, 0.5, 0, ktype=cv2.CV_32F)    
+    gabor1 = (cv2.filter2D(gray, cv2.CV_8UC3, kernel1)).mean()
     
-    return np.array(vector, dtype=np.float32)
+    #Gabor 2
+    kernel2 = cv2.getGaborKernel((9, 9), 3, np.pi/2, np.pi/4, 0.9, 0, ktype=cv2.CV_32F)    
+    gabor2 = (cv2.filter2D(gray, cv2.CV_8UC3, kernel2)).mean()
+
+    #Gabor 3
+    kernel3 = cv2.getGaborKernel((9, 9), 5, np.pi/2, np.pi/2, 0.1, 0, ktype=cv2.CV_32F)    
+    gabor3 = (cv2.filter2D(gray, cv2.CV_8UC3, kernel3)).mean()
+
+    custom_features = np.array([A_feat, B_feat, ent_mean, ent_std, rob_mean, 
+                                sob_mean, gabor1, gabor2, gabor3], np.float32)
+
+    # custom_features /= (np.linalg.norm(custom_features) + 1e-6)
+    return custom_features
 
 def get_image_metadata(image_path): 
     img = cv2.imread(image_path)

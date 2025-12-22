@@ -98,10 +98,24 @@ CREATE TABLE IF NOT EXISTS keyframe_features (
 cursor.executescript(ddl)
 
 img_label = []
-with open("../../database/image_file/labels.txt", "r") as f:
-    img_label = [line.strip() for line in f.readlines()]
+img_path = []
 
-img_path = [image for image in glob.glob(os.path.join(r"..\..\database\image_file", "*.png"))]
+for image_label in os.listdir(r"..\..\database\image_file"):
+    label_path = os.path.join(r"..\..\database\image_file", image_label)
+
+    if not os.path.isdir(label_path):
+        continue
+
+    for fname in os.listdir(label_path):
+        path = os.path.join(label_path, fname)
+        img_label.append(image_label)
+        img_path.append(path)
+
+# img_label = []
+# with open("../../database/image_file/labels.txt", "r") as f:
+#     img_label = [line.strip() for line in f.readlines()]
+
+# img_path = [image for image in glob.glob(os.path.join(r"..\..\database\image_file", "*.png"))]
 
 print(f"- Starting populating database with {len(img_path)} image data...")
 

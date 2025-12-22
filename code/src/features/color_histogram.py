@@ -102,7 +102,7 @@ def get_vector(rgb, hsv ,bins=8):
     
     return vector
 
-def split_per_category(dataset_dict : dict, n : int = 50):
+def split_per_category(dataset_dict : dict, n : int = 9999):
     labels = dataset_dict[b'labels']
     data = dataset_dict[b'data']
 

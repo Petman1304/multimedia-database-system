@@ -1,7 +1,45 @@
-from src.features.color_histogram import *
+from features.color_histogram import *
+from features.feature_extraction import *
+import sqlite3
 import math
 import numpy as np
 
+def image_similarity_search(db : sqlite3.Connection, query, top_k=5):
+    cursor = db.cursor()
+    try:
+        vector_db = cursor.execute(
+            "SELECT media_id, image_vector FROM image_features"
+        )
+        vector_db = [(idx, np.frombuffer(feat, np.float32))for idx, feat in vector_db.fetchall()]
+    except:
+        print("Error fetching database")
+    
+    q = query
+    q_v = img_feature_extraction(q)
+
+    distances = []
+
+    for idx, v in vector_db:
+        distances.append((idx, math.dist(q_v, v)))
+
+    distances.sort(key=lambda x: x[1])
+
+    return distances[:top_k]
+
+def fetch_image_from_db(db:sqlite3.Connection, search_result:list):
+    cursor = db.cursor()
+    images = []
+
+    for id, dist in search_result:
+        cursor.execute(
+            "SELECT filepath FROM media WHERE media_id = ?",
+            (id,)
+        )
+        path = cursor.fetchone()[0]
+        img = cv2.imread(path)
+        images.append((id, dist, img))
+
+    return images
 
 def search(idx, labels, rgb_images, bins=8 ,top_k=5, method = 'euclidean'):
     assert method in ['euclidean', 'manhattan', 'chi-square']
@@ -33,7 +71,7 @@ def search(idx, labels, rgb_images, bins=8 ,top_k=5, method = 'euclidean'):
     for i in range(top_k):
         axs[i].imshow(rgb_images[top_idx[i]])
 
-    plt.show
+    plt.show 
 
     return res_labels, top_idx
 
