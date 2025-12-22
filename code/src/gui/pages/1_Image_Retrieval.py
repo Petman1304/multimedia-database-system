@@ -47,7 +47,7 @@ if uploaded:
         results = retriever.fetch_image_from_db(results)
 
         st.subheader("Results")
-        n_cols = 4 
+        n_cols = 3 
 
         for i in range(0, len(results), n_cols):
             cols = st.columns(n_cols)
