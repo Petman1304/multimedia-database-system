@@ -26,6 +26,8 @@ retriever = Retriever(get_db())
 
 st.title("Image Retrieval System")
 
+st.write(str(ROOT))
+
 uploaded = st.file_uploader(
     "Upload Image",
     type=["jpg", "png", "bmp"]
