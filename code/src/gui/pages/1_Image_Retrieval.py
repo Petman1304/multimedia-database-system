@@ -53,7 +53,7 @@ if uploaded:
 
         for col, (id, dist, img) in zip(cols, results):
             col.image(
-                img,
+                Path(img).as_posix(),
                 caption=f"media_id={id}\nSimilarity Score={dist:.3f}",
                 width='stretch',
                 channels='BGR')

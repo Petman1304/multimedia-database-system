@@ -1,8 +1,11 @@
 from features.color_histogram import *
 from features.feature_extraction import *
+from pathlib import Path
 import sqlite3
 import math
 import numpy as np
+
+ROOT = Path(__file__).resolve().parents[3]
 
 def image_similarity_search(db : sqlite3.Connection, query, top_k=5):
     cursor = db.cursor()
