@@ -48,6 +48,8 @@ if uploaded:
         st.subheader("Results")
         cols = st.columns(len(results))
 
+        st.write(str(results))
+
         for col, (id, dist, img) in zip(cols, results):
             col.image(
                 img,
