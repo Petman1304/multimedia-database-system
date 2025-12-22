@@ -56,6 +56,6 @@ if uploaded:
                     img,
                     caption=f"Media ID={id}\nSimilarity Score={dist:.3f}",
                     channels="BGR",
-                    use_container_width=True
+                    width="stretch"
                 )
                 
