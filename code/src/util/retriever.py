@@ -48,7 +48,7 @@ class Retriever:
                 (id,)
             )
             path = cursor.fetchone()[0]
-            path = os.path.join(base_dir, path)
+            path = os.path.join(base_dir, path.replace("\\", "/"))
             img = cv2.imread(path)
             images.append((id, dist, path))
 
