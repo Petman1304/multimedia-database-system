@@ -5,7 +5,8 @@ import numpy as np
 import streamlit as st
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT))
 
 from features.feature_extraction import *
 from retrieval.search import *
