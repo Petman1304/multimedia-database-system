@@ -26,16 +26,18 @@ retriever = Retriever(get_db())
 
 st.title("Image Retrieval System")
 
-db = get_db()
-cursor = db.cursor()
+# db = get_db()
+# cursor = db.cursor()
 
-paths = cursor.execute(
-    "SELECT filepath FROM media"
-)
+# paths = cursor.execute(
+#     "SELECT filepath FROM media"
+# )
 
-paths = [row for row in paths.fetchall()]
+# paths = [row for row in paths.fetchall()]
 
-st.write(str(paths))
+# st.write(str(paths))
+
+st.image("..\..\database\image_file\africans\0.jpg")
 
 
 uploaded = st.file_uploader(
