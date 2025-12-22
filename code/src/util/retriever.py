@@ -38,7 +38,7 @@ class Retriever:
 
         return distances[:top_k]
 
-    def fetch_image_from_db(self, search_result:list):
+    def fetch_image_from_db(self, search_result:list, base_dir):
         cursor = self.cursor
         images = []
 
@@ -49,7 +49,7 @@ class Retriever:
             )
             path = cursor.fetchone()[0]
             print(path)
-            path = Path(ROOT/path).as_posix()
+            path = os.path.normpath(os.path.join(base_dir, path))
             img = cv2.imread(path)
             images.append((id, dist, img))
 
