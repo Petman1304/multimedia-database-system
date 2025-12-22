@@ -38,7 +38,7 @@ class Retriever:
 
         return distances[:top_k]
 
-    def fetch_image_from_db(self, search_result:list, base_dir):
+    def fetch_image_from_db(self, search_result, base_dir):
         cursor = self.cursor
         images = []
 
