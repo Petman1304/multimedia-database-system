@@ -68,12 +68,10 @@ if uploaded:
         st.subheader("Results")
         cols = st.columns(len(results))
 
-        st.write(str(results))
-
         for col, (id, dist, img) in zip(cols, results):
             col.image(
                 img,
-                caption=f"media_id={id}\nSimilarity Score={dist:.3f}",
+                caption=f"Media ID={id}\nSimilarity Score={dist:.3f}",
                 width='stretch',
                 channels='BGR')
                 
