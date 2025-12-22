@@ -1,8 +1,11 @@
 from features.color_histogram import *
 from features.feature_extraction import *
+from pathlib import Path
 import sqlite3
 import math
 import numpy as np
+
+ROOT = Path(__file__).resolve().parents[3]
 
 class Retriever:
     def __init__(self, db:sqlite3.Connection):
@@ -45,6 +48,7 @@ class Retriever:
                 (id,)
             )
             path = cursor.fetchone()[0]
+            path = ROOT/path
             img = cv2.imread(path)
             images.append((id, dist, img))
 

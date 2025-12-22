@@ -1,7 +1,10 @@
 from features.feature_extraction import *
+from pathlib import Path
 import glob
 import sqlite3
 import os
+
+ROOT = Path(__file__).resolve().parents[2]
 
 def insert_images_data(filename, filepath, size,  label, width, height, channels, extension, vector, type='image'):
     vector = vector.tobytes()
@@ -100,13 +103,13 @@ cursor.executescript(ddl)
 img_label = []
 img_path = []
 
-for image_label in os.listdir(r"..\..\database\image_file"):
-    label_path = os.path.join(r"..\..\database\image_file", image_label)
+for image_label in os.listdir(ROOT / "database" / "image_file"):
+    label_path = os.path.join("database", "image_file", image_label)
 
-    if not os.path.isdir(label_path):
-        continue
+    # if not os.path.isdir(label_path):
+    #     continue
 
-    for fname in os.listdir(label_path):
+    for fname in os.listdir(ROOT/label_path):
         path = os.path.join(label_path, fname)
         img_label.append(image_label)
         img_path.append(path)
@@ -122,7 +125,7 @@ print(f"- Starting populating database with {len(img_path)} image data...")
 i = 0
 
 for img in img_path:
-    bgr_img = cv2.imread(img)
+    bgr_img = cv2.imread(ROOT/img)
 
     filename, size, height, width, channels, format = get_image_metadata(img)
 
@@ -138,12 +141,12 @@ print(f"- Finished populating database with {len(img_path)} image data...")
 videos = []
 
 for vid_label in os.listdir(r"..\..\database\video_file"):
-    label_path = os.path.join(r"..\..\database\video_file", vid_label)
+    label_path = os.path.join("database", "video_file", vid_label)
 
-    if not os.path.isdir(label_path):
-        continue
+    # if not os.path.isdir(label_path):
+    #     continue
 
-    for fname in os.listdir(label_path):
+    for fname in os.listdir(ROOT/label_path):
         video_path = os.path.join(label_path, fname)
         videos.append((video_path, vid_label))
 

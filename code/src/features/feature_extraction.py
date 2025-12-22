@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import math
 import os
+from pathlib import Path
 from skimage import img_as_ubyte
 from skimage.feature import local_binary_pattern, hog
 from skimage.filters import roberts, sobel
@@ -10,7 +11,7 @@ from skimage.filters.rank import entropy
 from skimage.morphology import disk
 from skimage.color import rgb2lab, rgb2gray
 
-
+ROOT = Path(__file__).resolve().parents[3]
 
 def img_to_lbp(rgb_image):
     gray = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
@@ -136,7 +137,8 @@ def img_feature_extraction (img):
     # custom_features /= (np.linalg.norm(custom_features) + 1e-6)
     return custom_features
 
-def get_image_metadata(image_path): 
+def get_image_metadata(image_path):
+    image_path = ROOT/image_path 
     img = cv2.imread(image_path)
 
     filename = os.path.basename(image_path)
@@ -150,6 +152,7 @@ def get_image_metadata(image_path):
     return filename, size, height, width, channels, format
 
 def extract_keyframes(video_path):
+    video_path = ROOT/video_path
     keyframes = []
 
     with av.open(video_path) as container:
@@ -167,6 +170,7 @@ def extract_keyframes(video_path):
     return keyframes
 
 def get_video_metadata(video_path):
+    video_path = ROOT/video_path
     try:
         with av.open(video_path) as container:
             filename = os.path.basename(video_path)
