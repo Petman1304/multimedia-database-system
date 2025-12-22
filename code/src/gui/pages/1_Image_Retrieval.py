@@ -26,7 +26,11 @@ retriever = Retriever(get_db())
 
 st.title("Image Retrieval System")
 
-st.write(str(ROOT))
+paths = Retriever.cursor.execute(
+    "SELECT filepath FROM media").fetchall()
+
+st.write(str(paths[0]))
+
 
 uploaded = st.file_uploader(
     "Upload Image",
