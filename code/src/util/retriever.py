@@ -49,7 +49,7 @@ class Retriever:
             )
             path = cursor.fetchone()[0]
             print(path)
-            path = Path(ROOT/path).as_posix()
+            path = Path(ROOT/path)
             img = cv2.imread(path)
             images.append((id, dist, img))
 
