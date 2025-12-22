@@ -43,12 +43,15 @@ if uploaded:
         results = retriever.fetch_image_from_db(results)
 
         st.subheader("Results")
-        cols = st.columns(len(results))
+        n_cols = 4 
 
-        for col, (id, dist, img) in zip(cols, results):
-            col.image(
-                img,
-                caption=f"Media ID={id}\nSimilarity Score={dist:.3f}",
-                width='stretch',
-                channels='BGR')
+        for i in range(0, len(results), n_cols):
+            cols = st.columns(n_cols)
+            for col, (id, dist, img) in zip(cols, results[i:i+n_cols]):
+                col.image(
+                    img,
+                    caption=f"Media ID={id}\nSimilarity Score={dist:.3f}",
+                    channels="BGR",
+                    use_container_width=True
+                )
                 
