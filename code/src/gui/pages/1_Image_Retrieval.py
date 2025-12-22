@@ -5,9 +5,6 @@ import numpy as np
 import streamlit as st
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.append(str(ROOT))
-
 from features.feature_extraction import *
 from retrieval.search import *
 from util.retriever import Retriever
@@ -19,31 +16,13 @@ def get_db():
         check_same_thread=False
     )
 
+base_dir = os.path.join(Path(__file__).resolve().parents[4])
 
-retriever = Retriever(get_db()) 
+retriever = Retriever(get_db(), base_dir) 
 
 # UI
 
 st.title("Image Retrieval System")
-
-# db = get_db()
-# cursor = db.cursor()
-
-# paths = cursor.execute(
-#     "SELECT filepath FROM media"
-# )
-
-# paths = [row for row in paths.fetchall()]
-
-# st.write(str(paths))
-
-base_dir = os.path.join(Path(__file__).resolve().parents[4])
-st.write(base_dir)
-# db_path = r"..\..\database\image_file\africans\1.jpg"
-# db_path = db_path.replace("\\", "/")
-# img_path = os.path.normpath(os.path.join(Path(__file__).resolve().parents[2], db_path))
-# st.image(img_path)
-
 
 uploaded = st.file_uploader(
     "Upload Image",
@@ -61,9 +40,7 @@ if uploaded:
 
     if st.button("Search"):
         results = retriever.image_similarity_search(query_img, top_k)
-        results = retriever.fetch_image_from_db(results, base_dir)
-        # results = image_similarity_search(db, query_img, top_k)
-        # results = fetch_image_from_db(db, results)
+        results = retriever.fetch_image_from_db(results)
 
         st.subheader("Results")
         cols = st.columns(len(results))

@@ -8,9 +8,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[3]
 
 class Retriever:
-    def __init__(self, db:sqlite3.Connection):
+    def __init__(self, db:sqlite3.Connection, base_dir):
         self.db = db
         self.cursor = db.cursor()
+        self.base_dir = base_dir
 
     def image_similarity_search(self, query, top_k=5):
         try:
@@ -38,7 +39,7 @@ class Retriever:
 
         return distances[:top_k]
 
-    def fetch_image_from_db(self, search_result, base_dir):
+    def fetch_image_from_db(self, search_result):
         cursor = self.cursor
         images = []
 
@@ -48,7 +49,7 @@ class Retriever:
                 (id,)
             )
             path = cursor.fetchone()[0]
-            path = os.path.join(base_dir, path.replace("\\", "/"))
+            path = os.path.join(self.base_dir, path.replace("\\", "/"))
             img = cv2.imread(path)
             images.append((id, dist, path))
 
