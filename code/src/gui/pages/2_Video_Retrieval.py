@@ -94,7 +94,7 @@ if st.button("Search"):
 
     filtered_vid = retriever.video_metadata_filter(max_size*1024, min_fps, max_fps, min_dur, max_dur, ext)
     filtered_vid = [row[0] for row in filtered_vid]
-    st.write(filtered_vid)
+    
 
     if query is None:
         results = [(id, 0.) for id in filtered_vid]
@@ -103,7 +103,7 @@ if st.button("Search"):
         results = retriever.video_similarity_search(query, search_method=search_method, top_k=top_k)
         results = [(id, dist) for id, dist in results if id in filtered_vid]
         results = results
-    
+    st.write(results)
     results = retriever.fetch_video_from_db(results)
 
     end_time = time.perf_counter()
