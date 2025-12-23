@@ -79,6 +79,7 @@ if st.button("Search"):
     start_time = time.perf_counter()
 
     filtered_img = retriever.image_metadata_filter(max_size*1024, min_w, max_w, min_h, max_h, ext)
+    filtered_img = [row[0] for row in filtered_img]
 
     if query_img == None:
         results = [(id, 0.) for id in filtered_img]
