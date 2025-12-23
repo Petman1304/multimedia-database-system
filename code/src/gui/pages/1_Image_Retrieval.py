@@ -27,14 +27,14 @@ retriever = Retriever(get_db(), base_dir)
 
 def image_caption(id, dist, fn, size, w, h, ch, ext):
     caption =f"""
-    Media ID={id}\n
-    Similarity Score={dist:.3f}\n
-    File name={fn}\n
-    Size={size}\n
-    Width={w}\n
-    Height={h}\n
-    N_channels={ch}\n
-    File extension={ext}
+    Media ID= {id}\n
+    Similarity Score= {dist:.3f}\n
+    File name= {fn}\n
+    Size= {size/(1024**2)} MB\n
+    Width= {w} px\n
+    Height= {h} px\n
+    N_channels= {ch}\n
+    File extension= {ext}
     """
     return caption
 
