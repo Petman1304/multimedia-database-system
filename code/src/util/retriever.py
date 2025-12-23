@@ -215,7 +215,7 @@ INNER JOIN keyframe_features on video_keyframes.keyframe_id = keyframe_features.
             row = cursor.fetchone()
             path = row[1]
             path = os.path.join(self.base_dir, path.replace("\\", "/"))
-            img = cv2.imread(path)
+            
 
             fn = row[0]
             size = row[2]
@@ -228,7 +228,7 @@ INNER JOIN keyframe_features on video_keyframes.keyframe_id = keyframe_features.
             metadata = (fn, size, dur, fps, ext)
 
 
-            videos.append((id, dist, img, metadata, label))
+            videos.append((id, dist, path, metadata, label))
         return videos
     
     def image_metadata_filter(self, max_size, min_w, max_w, min_h, max_h, ext):
