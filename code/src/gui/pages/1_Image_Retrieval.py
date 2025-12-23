@@ -41,7 +41,9 @@ with st.popover("Advanced Query"):
         ["Euclidean Distance", "Cosine Similarity", "KNN"],
         selection_mode="single",
         default="Euclidean Distance"
-    ) 
+    )
+    if search_method == None:
+        st.caption("Please select a method")
 
     top_k = st.slider("Top K", 1, 10, 5)
 
