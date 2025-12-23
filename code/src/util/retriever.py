@@ -100,7 +100,7 @@ WHERE 1=1
             e = ",".join("?" for _ in ext)
             db_q += f"AND image_metadata.extension IN ({e})"
 
-        params.extend(e)
+        params.extend(ext)
 
         db_q += "AND image_metadata.width BETWEEN ? AND ?"
         params.extend([min_w, max_w])
