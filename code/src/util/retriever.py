@@ -75,6 +75,44 @@ FROM image_features
         distances.sort(key=lambda x: x[1], reverse=True)
 
         return distances[:top_k]
+    
+    def video_similarity_search(self, query, search_method="Euclidean Distance", top_k=5):
+        try:
+            vector_db = self.cursor.execute("""
+                                            SELECT video_keyframes.media_id, keyframes_features.keyframe_vector FROM video_keyframes
+                                            INNER JOIN keyframes_features on video_keyframes.keyframe_id = keyframes_features.keyframe_id"
+            """)
+            vector_db = [(idx, np.frombuffer(feat, np.float32))for idx, feat in vector_db.fetchall()]
+        except:
+            print("Error fetching database")
+        
+        q = query
+        q_v = img_feature_extraction(q)
+
+        from collections import defaultdict
+
+        video_scores = defaultdict(float)
+
+        for media_id, v in vector_db:
+            if search_method == "Euclidean Distance":
+                score = 1 - self.euclidean_dist(q_v, v)
+
+            elif search_method == "Cosine Similarity":
+                score =  self.cosine_similarity(q_v, v)
+
+            else:
+                knn = self.video_knn
+
+                m_id = []
+                for idx, v in vector_db:
+                    m_id.append(idx)
+
+                distances = self.knn_search(knn, m_id, q_v, 20*top_k)
+
+        
+        distances.sort(key=lambda x: x[1], reverse=True)
+
+        return distances[:top_k]
 
     def fetch_image_from_db(self, search_result):
         cursor = self.cursor
