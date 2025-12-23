@@ -70,7 +70,7 @@ if uploaded:
     if st.button("Search"):
         start_time = time.perf_counter()
 
-        results = retriever.image_similarity_search(query_img, top_k)
+        results = retriever.image_similarity_search(query_img, search_method=search_method, top_k=top_k)
         results = retriever.fetch_image_from_db(results)
 
         end_time = time.perf_counter()

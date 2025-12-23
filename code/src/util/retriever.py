@@ -42,6 +42,7 @@ class Retriever:
                 distances.append((idx, self.cosine_similarity(q_v, v)))
 
             distances.sort(key=lambda x: x[1], reverse=True)
+        print(distances)[:top_k]
 
         return distances[:top_k]
 
