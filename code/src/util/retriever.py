@@ -45,14 +45,41 @@ class Retriever:
 
         for id, dist in search_result:
             cursor.execute(
-                "SELECT filepath FROM media WHERE media_id = ?",
-                (id,)
+                """
+                SELECT 
+                    media.filename, media.filepath, media.size,
+                    image.label,
+                    image_metadata.width, image_metadata.height, image_metadata.channels, image_metadata.extension
+                FROM 
+                    media 
+                WHERE 
+                    media_id = ?
+                INNER JOIN 
+                    image ON media.media_id = image.media_id
+                INNER JOIN
+                    image_metadata ON media.media_id = image_metadata.media_id
+                """,
+                (id)
             )
-            path = cursor.fetchone()[0]
+
+            row = cursor.fetchone()
+            path = row[1]
             path = os.path.join(self.base_dir, path.replace("\\", "/"))
             img = cv2.imread(path)
-            images.append((id, dist, path))
 
+            fn = row[0]
+            size = row[2]
+            w = row[4]
+            h = row[5]
+            ch = row[6]
+            ext = row[7]
+
+            label = row[3]
+
+            metadata = (fn, size, w, h, ch, ext)
+
+
+            images.append((id, dist, img, metadata, label))
         return images
 
     def euclidean_dist(self, base, target):

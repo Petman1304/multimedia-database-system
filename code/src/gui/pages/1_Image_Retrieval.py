@@ -70,10 +70,19 @@ if uploaded:
 
         for i in range(0, len(results), n_cols):
             cols = st.columns(n_cols)
-            for col, (id, dist, img) in zip(cols, results[i:i+n_cols]):
+            for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
                 col.image(
                     img,
-                    caption=f"Media ID={id}\nSimilarity Score={dist:.3f}",
+                    caption=f"""
+                    Media ID={id}\n
+                    Similarity Score={dist:.3f}\n
+                    File name={metadata[0]}\n
+                    Size={metadata[1]}\n
+                    Width={metadata[2]}\n
+                    Height={metadata[3]}\n
+                    N_channels={metadata[4]}\n
+                    File extension={metadata[5]}
+                    """,
                     channels="BGR",
                     width="stretch"
                 )
