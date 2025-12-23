@@ -52,35 +52,10 @@ st.markdown(
 ### Video Retrieval
 - Pencarian berbasis **keyframe**
 - Aggregasi similarity keyframe → video
-- Dukungan video format AVI (internal) dengan konversi MP4 untuk tampilan
 - Ranking video berdasarkan similarity score
 """
 )
 
-st.header("System Workflow")
-
-st.markdown(
-"""
-1. **Data Storage**
-   - Media disimpan dalam database
-   - Feature vektor disimpan terpisah untuk efisiensi pencarian
-
-2. **Query Processing**
-   - Query image / video diproses menjadi feature vector
-   - Metadata filter diterapkan (opsional)
-
-3. **Similarity Search**
-   - Perhitungan jarak / similarity
-   - KNN digunakan untuk pencarian tetangga terdekat
-
-4. **Result Aggregation**
-   - Pooling similarity (min / max / average)
-   - Ranking hasil akhir
-
-5. **Visualization**
-   - Image dan video ditampilkan pada antarmuka Streamlit
-"""
-)
 
 st.header("Technical Notes")
 
@@ -89,7 +64,6 @@ st.markdown(
 - Backend menggunakan **SQLite**
 - Feature extraction dilakukan secara offline
 - Streamlit digunakan sebagai antarmuka interaktif
-- FFmpeg digunakan untuk konversi video saat visualisasi
 """
 )
 
