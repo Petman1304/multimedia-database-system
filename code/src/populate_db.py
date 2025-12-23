@@ -1,4 +1,7 @@
-from features.feature_extraction import *
+# Script to populate sqlite3 db using image and video files in database folder
+
+
+from util.feature_extraction import *
 from pathlib import Path
 import glob
 import sqlite3
