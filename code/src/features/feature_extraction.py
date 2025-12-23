@@ -134,7 +134,7 @@ def img_feature_extraction (img):
     custom_features = np.array([A_feat, B_feat, ent_mean, ent_std, rob_mean, 
                                 sob_mean, gabor1, gabor2, gabor3], np.float32)
 
-    # custom_features /= (np.linalg.norm(custom_features) + 1e-6)
+    custom_features /= (np.linalg.norm(custom_features) + 1e-6)
     return custom_features
 
 def get_image_metadata(image_path):
@@ -163,7 +163,7 @@ def extract_keyframes(video_path):
         for frame in container.decode(stream):
             if frame.key_frame:
                 img = frame.to_ndarray(format="bgr24")
-                img = cv2.resize(img, (160, 120), interpolation=cv2.INTER_AREA)
+                img = cv2.resize(img, (128, 128), interpolation=cv2.INTER_AREA)
                 timestamp = float(frame.pts*stream.time_base)
                 keyframes.append((timestamp, img))
 

@@ -31,11 +31,17 @@ class Retriever:
             print(idx, np.linalg.norm(v))
 
         distances = []
+        
+        if search_method == "Euclidean Distance":
+            for idx, v in vector_db:
+                distances.append((idx, self.euclidean_dist(q_v, v)))
 
-        for idx, v in vector_db:
-            distances.append((idx, self.cosine_similarity(q_v, v)))
+            distances.sort(key=lambda x: x[1], reverse=False)
+        elif search_method == "Cosine Similarity":
+            for idx, v in vector_db:
+                distances.append((idx, self.cosine_similarity(q_v, v)))
 
-        distances.sort(key=lambda x: x[1], reverse=True)
+            distances.sort(key=lambda x: x[1], reverse=True)
 
         return distances[:top_k]
 
@@ -93,4 +99,4 @@ class Retriever:
         return chi
     
     def cosine_similarity(self, base, target):
-        return np.dot(base, target) / ((np.linalg.norm(base)*np.linalg.norm(target)) + 1e-6)
+        return np.dot(base, target)
