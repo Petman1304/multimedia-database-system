@@ -34,7 +34,16 @@ uploaded = st.file_uploader(
     type=["jpg", "png", "bmp"]
 )
 
-top_k = st.slider("Top K", 1, 10, 5)
+# Search by metadata
+with st.popover("Advanced Query"):
+    search_method = st.segmented_control(
+        "Search Method", 
+        ["Euclidean Distance", "Cosine Similarity", "KNN"],
+        selection_mode="single",
+        default="Euclidean Distance"
+    ) 
+
+    top_k = st.slider("Top K", 1, 10, 5)
 
 if uploaded:
     file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
