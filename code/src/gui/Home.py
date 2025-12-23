@@ -16,21 +16,89 @@ st.set_page_config(
 )
 
 
+
 st.title("Multimedia Retrieval System")
 
-st.write(
-    """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In non ligula ut felis cursus congue. Proin in felis sit amet dui sagittis feugiat. Curabitur vel nunc cursus, lobortis orci vitae, mollis odio. Mauris pretium dictum bibendum. Quisque sollicitudin diam dui, eu tincidunt lacus blandit vehicula. Fusce et urna a neque condimentum vehicula sit amet a dui. Proin egestas orci at leo posuere rutrum. Phasellus velit urna, efficitur consectetur dolor a, maximus ultrices elit. Aenean imperdiet non magna ac tempor. Integer mattis arcu nec aliquam interdum.
+st.markdown(
+"""
+Sistem ini merupakan **aplikasi pencarian multimedia** yang mendukung **image retrieval** dan **video retrieval**
+menggunakan pendekatan **content-based retrieval**.
 
-Proin ac elit quis est placerat tincidunt. Duis sit amet cursus tortor, et ultrices massa. Mauris tincidunt quam ut felis sollicitudin consequat. Duis mattis libero magna, a consectetur eros rutrum ut. Donec ut erat feugiat enim efficitur euismod rhoncus tincidunt ligula. Aliquam tempor pulvinar commodo. Etiam imperdiet augue sapien, nec posuere metus tincidunt eu. Praesent quis risus diam. Integer semper nibh quis dolor fermentum pretium. Ut porttitor ligula nibh, eget feugiat felis scelerisque sed. Cras euismod vulputate tristique. Curabitur vel lorem interdum, porta dui nec, suscipit velit. Pellentesque non metus semper, sagittis dui non, sollicitudin arcu.
+Pengguna dapat melakukan pencarian berdasarkan:
+- **Kemiripan visual (feature-based similarity)**
+- **Metadata filtering**
+- **Hybrid search (visual + metadata)**
 
-Donec finibus sem auctor odio hendrerit venenatis. Proin et luctus felis. Quisque blandit leo ac tellus condimentum, nec viverra nulla semper. Duis euismod ex non tempus convallis. Mauris eu nunc ultrices, pellentesque felis sed, faucibus sapien. Etiam dapibus consequat nisi, nec tempus turpis. Duis auctor dignissim lacus, eu tempus ipsum luctus vitae. Vestibulum eget elit mattis, sodales velit vitae, tristique ante. Duis non elementum mauris.
+Sistem ini dirancang untuk mendukung eksperimen dan evaluasi performa pada domain
+**multimedia database dan information retrieval**.
+"""
+)
 
-Curabitur quis metus tristique, vehicula nunc id, aliquet magna. Integer blandit, lorem a mollis blandit, elit arcu viverra risus, id pharetra purus nulla luctus est. Nullam efficitur eros id nibh posuere, vel laoreet ligula cursus. Vivamus faucibus odio quis sagittis aliquam. Sed venenatis blandit ex, eget accumsan leo faucibus a. Sed id mauris porttitor, imperdiet lectus fringilla, suscipit tortor. Morbi sit amet nisi diam. Cras maximus aliquam justo quis maximus. Morbi luctus varius neque non elementum. Aenean ac quam vitae nibh laoreet sagittis. Integer efficitur ullamcorper nisl eu commodo.
+st.header("Main Features")
 
-Morbi finibus condimentum neque, ac elementum libero molestie et. Duis nec maximus justo. Cras a nunc finibus, aliquam erat quis, porta ex. Quisque et porta ipsum, sit amet porta ex. Cras tincidunt, lacus eu tristique tristique, nunc enim ultrices dolor, sed congue ante est nec eros. Etiam efficitur lectus eu odio rhoncus sollicitudin. Duis viverra orci efficitur nunc iaculis interdum.
-    """
-    )
+st.markdown(
+"""
+### Image Retrieval
+- Ekstraksi fitur visual berbasis vektor
+- Pencarian menggunakan:
+  - Euclidean Distance
+  - Cosine Similarity
+  - K-Nearest Neighbors (KNN)
+- Filter metadata:
+  - Resolusi (width & height)
+  - Ukuran file
+  - Format gambar
+
+### Video Retrieval
+- Pencarian berbasis **keyframe**
+- Aggregasi similarity keyframe → video
+- Dukungan video format AVI (internal) dengan konversi MP4 untuk tampilan
+- Ranking video berdasarkan similarity score
+"""
+)
+
+st.header("System Workflow")
+
+st.markdown(
+"""
+1. **Data Storage**
+   - Media disimpan dalam database
+   - Feature vektor disimpan terpisah untuk efisiensi pencarian
+
+2. **Query Processing**
+   - Query image / video diproses menjadi feature vector
+   - Metadata filter diterapkan (opsional)
+
+3. **Similarity Search**
+   - Perhitungan jarak / similarity
+   - KNN digunakan untuk pencarian tetangga terdekat
+
+4. **Result Aggregation**
+   - Pooling similarity (min / max / average)
+   - Ranking hasil akhir
+
+5. **Visualization**
+   - Image dan video ditampilkan pada antarmuka Streamlit
+"""
+)
+
+st.header("Technical Notes")
+
+st.markdown(
+"""
+- Backend menggunakan **SQLite**
+- Feature extraction dilakukan secara offline
+- Streamlit digunakan sebagai antarmuka interaktif
+- FFmpeg digunakan untuk konversi video saat visualisasi
+"""
+)
+
+st.markdown("---")
+st.caption("Multimedia Database System | Content-Based Retrieval")
+
+
+
+
 
 
 

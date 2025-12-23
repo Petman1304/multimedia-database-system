@@ -30,9 +30,9 @@ retriever = Retriever(get_db(), base_dir)
 def video_caption(fn, size, dur, fps, ext):
     caption =f"""
     File name= {fn}\n
-    Size= {size/(1024)} KB\n
-    Duration= {dur} px\n
-    FPS= {fps} px\n
+    Size= {size/(1024):.2f} KB\n
+    Duration= {dur} s\n
+    FPS= {fps}\n
     File extension= {ext}
     """
     return caption
