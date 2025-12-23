@@ -85,9 +85,9 @@ if st.button("Search"):
         results = [(id, 0.) for id in filtered_img]
         results = results[:top_k]
     else:
-        results = retriever.image_similarity_search(query_img, search_method=search_method)
+        results = retriever.image_similarity_search(query_img, search_method=search_method, top_k=top_k)
         results = [(id, dist) for id, dist in results if id in filtered_img]
-        results = results[:top_k]
+        results = results
     
     results = retriever.fetch_image_from_db(results)
 

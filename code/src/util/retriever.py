@@ -1,6 +1,6 @@
-from features.color_histogram import *
-from features.feature_extraction import *
+from feature_extraction import *
 from pathlib import Path
+from sklearn.neighbors import NearestNeighbors
 import sqlite3
 import math
 import numpy as np
@@ -13,7 +13,32 @@ class Retriever:
         self.cursor = db.cursor()
         self.base_dir = base_dir
 
-    def image_similarity_search(self, query, search_method="Euclidean Distance"):
+    def build_image_knn(self):
+        self.cursor.execute(
+            """
+SELECT image_features.media_id, image_features.image_vector
+FROM image_features
+"""
+        )
+
+        vecs = self.cursor.fetchall()
+        img_v = []
+        m_id = []
+
+        for id, v in vecs:
+            m_id.append(id)
+            img_v.append(np.frombuffer(v, dtype=np.float32))
+
+        knn = NearestNeighbors(
+            n_neighbors=13,
+        )
+
+        knn.fit(img_v)
+
+        return knn 
+
+
+    def image_similarity_search(self, query, search_method="Euclidean Distance", top_k=5):
         try:
             vector_db = self.cursor.execute(
                 "SELECT media_id, image_vector FROM image_features"
@@ -24,11 +49,7 @@ class Retriever:
         
         q = query
         q_v = img_feature_extraction(q)
-        print("Query norm:", np.linalg.norm(q_v))
 
-        for idx, v in vector_db[:5]:
-            v = np.frombuffer(v, np.float32)
-            print(idx, np.linalg.norm(v))
 
         distances = []
         
@@ -39,11 +60,20 @@ class Retriever:
         elif search_method == "Cosine Similarity":
             for idx, v in vector_db:
                 distances.append((idx, self.cosine_similarity(q_v, v)))
+        
+        else:
+            knn = self.build_image_knn()
+
+            m_id = []
+            for idx, v in vector_db:
+                m_id.append(idx)
+
+            distances = self.knn_search(knn, m_id, q_v, 5)
 
         
         distances.sort(key=lambda x: x[1], reverse=True)
 
-        return distances
+        return distances[:top_k]
 
     def fetch_image_from_db(self, search_result):
         cursor = self.cursor
@@ -126,3 +156,9 @@ WHERE 1=1
     
     def cosine_similarity(self, base, target):
         return np.dot(base, target)
+    
+    def knn_search(self, knn, m_id, query, top_k):
+        query = query.reshape(1, -1)
+        dist, idx = knn.kneighbors(query, n_neighbor=top_k)
+
+        return ((m_id[i], dist) for i, dist in zip(idx[0], dist[0]))
