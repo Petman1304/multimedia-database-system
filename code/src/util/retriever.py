@@ -1,16 +1,12 @@
+from util.feature_extraction import *
 from pathlib import Path
 from sklearn.neighbors import NearestNeighbors
 import sqlite3
 import math
 import numpy as np
-import sys
 
-ROOT = Path().resolve().parents[0]
-sys.path.append(str(ROOT))
+ROOT = Path(__file__).resolve().parents[3]
 
-from .feature_extraction import *
-
-# Retriever class to handle content base retrieval from db
 class Retriever:
     def __init__(self, db:sqlite3.Connection, base_dir):
         self.db = db

@@ -1,5 +1,3 @@
-# Functions for feature extractions
-
 import av
 import cv2
 import numpy as np
@@ -14,6 +12,88 @@ from skimage.morphology import disk
 from skimage.color import rgb2lab, rgb2gray
 
 ROOT = Path(__file__).resolve().parents[3]
+
+def img_to_lbp(rgb_image):
+    gray = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
+    lbp = local_binary_pattern(gray, 24, 3, method='uniform')
+    n_bins = int(lbp.max() + 1)
+    hist,_ = np.histogram(lbp, n_bins, range=(0, n_bins))
+    hist = np.array(hist, np.float64)
+    hist /= (hist.sum() + 1e-6)
+    return hist
+
+def img_to_hog(rgb_image):
+    gray = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
+    features = hog(
+        gray,
+        orientations=9,
+        pixels_per_cell=(16, 16),
+        cells_per_block=(2, 2),
+        block_norm="L2-Hys",
+        visualize=False
+    )
+
+    return features
+
+# def img_to_hu_moments(rgb_image):
+    # Convert rgb image to grayscale
+    img = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2GRAY)
+
+    # Find image edges
+    edges = cv2.Canny(img, 200, 400)
+
+    # Extract image countours
+    contours, _ = cv2.findContours(edges,
+                               cv2.RETR_EXTERNAL,
+                               cv2.CHAIN_APPROX_SIMPLE)
+    
+    if len(contours) == 0:
+        return np.zeros(7, dtype=np.float32)
+    
+    contours = max(contours, key=cv2.contourArea)
+    
+    # Calculate Hu Moments
+    moments = cv2.moments(contours)
+    huMoments = cv2.HuMoments(moments).flatten()
+
+    # Log transform to bring hu moments in the same range
+    huMoments = -np.sign(huMoments) * np.log10(np.abs(huMoments))
+
+    # Return normalize Hu Moment
+    return huMoments/(np.linalg.norm(huMoments) + 1e-8)
+
+def img_to_hist(rgb_image, bins=8):
+    rgb = rgb_image
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+
+    red = cv2.calcHist(
+        [rgb], [0], None, [bins], [0, 256]
+    )
+
+    green = cv2.calcHist(
+        [rgb], [1], None, [bins], [0, 256]
+    )
+    
+    blue = cv2.calcHist(
+        [rgb], [2], None, [bins], [0, 256]
+    )
+
+    hue = cv2.calcHist(
+        [hsv], [0], None, [bins], [0, 256]
+    )
+
+    saturation = cv2.calcHist(
+        [hsv], [1], None, [bins], [0, 256]
+    )
+
+    value = cv2.calcHist(
+        [hsv], [2], None, [bins], [0, 256]
+    )
+
+    vector = np.concatenate([red, green, blue, hue, saturation, value], axis=0)
+    vector = vector.reshape(-1)
+
+    return vector / (vector.sum() + 1e-6)
 
 def img_feature_extraction (img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
