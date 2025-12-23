@@ -25,10 +25,9 @@ base_dir = os.path.join(Path(__file__).resolve().parents[4])
 
 retriever = Retriever(get_db(), base_dir) 
 
-def image_caption(id, dist, fn, size, w, h, ch, ext):
+def image_caption(fn, size, w, h, ch, ext):
     caption =f"""
     Media ID= {id}\n
-    Similarity Score= {dist:.3f}\n
     File name= {fn}\n
     Size= {size/(1024)} KB\n
     Width= {w} px\n
@@ -89,14 +88,12 @@ if uploaded:
                 for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
                     col.image(
                         img,
+                        caption=f"Similarity Score= {dist}",
                         channels="BGR",
                         width="stretch"
                     )
                     with col.expander("Metadata"):
                         st.write(
-                            image_caption(
-                            id, 
-                            dist, 
-                            *metadata
-                        ))
+                            image_caption( *metadata)
+                            )
                 
