@@ -89,7 +89,7 @@ if uploaded:
                     channels="BGR",
                     width="stretch"
                 )
-                with st.expander("Metadata"):
+                with col.expander("Metadata"):
                     st.write(
                         image_caption(
                         id, 
