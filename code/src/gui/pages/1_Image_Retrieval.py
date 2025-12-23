@@ -57,7 +57,7 @@ with st.popover("Advanced Query"):
     if search_method == None:
         st.warning("Please select a method")
 
-    max_size = st.slider("Image Size (MB)", 0, 5, 2)
+    max_size = st.slider("Image Size (KB)", 0, 4096, 1024)
     min_w, max_w = st.slider("Image Width", 0, 4096, (0, 2048))
     min_h, max_h = st.slider("Image Height", 0, 4096, (0, 2048))
     ext = st.multiselect(
@@ -78,7 +78,7 @@ if uploaded:
 if st.button("Search"):
     start_time = time.perf_counter()
 
-    filtered_img = retriever.image_metadata_filter(max_size, min_w, max_w, min_h, max_h, ext)
+    filtered_img = retriever.image_metadata_filter(max_size*1024, min_w, max_w, min_h, max_h, ext)
 
     if query_img == None:
         results = [(id, 0.) for id in filtered_img]
