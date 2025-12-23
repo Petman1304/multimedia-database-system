@@ -13,7 +13,7 @@ class Retriever:
         self.cursor = db.cursor()
         self.base_dir = base_dir
 
-    def image_similarity_search(self, query, top_k=5):
+    def image_similarity_search(self, query, search_method="Euclidean Distance", top_k=5):
         try:
             vector_db = self.cursor.execute(
                 "SELECT media_id, image_vector FROM image_features"
