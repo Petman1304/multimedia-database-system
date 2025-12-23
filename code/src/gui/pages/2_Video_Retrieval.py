@@ -103,7 +103,7 @@ if st.button("Search"):
         results = retriever.video_similarity_search(query, search_method=search_method, top_k=top_k)
         results = [(id, dist) for id, dist in results if id in filtered_vid]
         results = results
-    st.write(results)
+    st.write(str(results))
     results = retriever.fetch_video_from_db(results)
 
     end_time = time.perf_counter()
