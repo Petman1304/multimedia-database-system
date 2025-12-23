@@ -79,21 +79,24 @@ if uploaded:
         st.subheader("Results")
         st.write(f"Query time : {q_time:.4f} s")
 
-        n_cols = 3 
+        if len(results) == 0:
+            st.write("No images match your query.")
+        else:
+            n_cols = 3 
 
-        for i in range(0, len(results), n_cols):
-            cols = st.columns(n_cols)
-            for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
-                col.image(
-                    img,
-                    channels="BGR",
-                    width="stretch"
-                )
-                with col.expander("Metadata"):
-                    st.write(
-                        image_caption(
-                        id, 
-                        dist, 
-                        *metadata
-                    ))
+            for i in range(0, len(results), n_cols):
+                cols = st.columns(n_cols)
+                for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
+                    col.image(
+                        img,
+                        channels="BGR",
+                        width="stretch"
+                    )
+                    with col.expander("Metadata"):
+                        st.write(
+                            image_caption(
+                            id, 
+                            dist, 
+                            *metadata
+                        ))
                 
