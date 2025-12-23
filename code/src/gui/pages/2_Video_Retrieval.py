@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 import streamlit as st
 import time
+import tempfile
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +37,20 @@ def video_caption(fn, size, dur, fps, ext):
     """
     return caption
 
+def avi_to_mp4_temp(avi_path):
+    tmp_dir = tempfile.gettempdir()
+    base = os.path.splitext(os.path.basename(avi_path))[0]
+    mp4_path = os.path.join(tmp_dir, base + ".mp4")
+
+    if not os.path.exists(mp4_path):
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", avi_path, "-c:v", "libx264", "-an", mp4_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+    return mp4_path
+
 # UI
 
 st.title("Video Retrieval System")
@@ -60,8 +76,8 @@ with st.popover("Advanced Query"):
     min_dur, max_dur = st.slider("Video Duration", 0, 300, (0, 60))
     ext = st.multiselect(
         "Video Extension",
-        ["avi", "mp4", "mkv"],
-        default=["avi", "mp4", "mkv"])
+        ["avi", "mp4"],
+        default=["avi", "mp4"])
 
     top_k = st.slider("Top K", 1, 10, 5)
 
@@ -103,6 +119,10 @@ if st.button("Search"):
         for i in range(0, len(results), n_cols):
             cols = st.columns(n_cols)
             for col, (id, dist, vid, metadata, label) in zip(cols, results[i:i+n_cols]):
+                
+                if(metadata[4] == "avi"):
+                    vid = avi_to_mp4_temp(vid)
+                
                 col.video(
                     vid,
                     width="stretch"
