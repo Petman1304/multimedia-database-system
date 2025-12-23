@@ -110,6 +110,7 @@ WHERE 1=1
         params.append(max_size)
 
         self.cursor.execute(db_q, params)
+        
         return self.cursor.fetchall()
 
 
