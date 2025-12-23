@@ -103,11 +103,9 @@ if st.button("Search"):
         results = retriever.video_similarity_search(query, search_method=search_method, top_k=top_k)
         results = [(id, dist) for id, dist in results if id in filtered_vid]
         results = results
-        
-    st.write(str(results))
+
     
     results = retriever.fetch_video_from_db(results)
-    st.write(str(results))
 
     end_time = time.perf_counter()
     q_time = end_time - start_time
@@ -125,7 +123,6 @@ if st.button("Search"):
             for col, (id, dist, vid, metadata, label) in zip(cols, results[i:i+n_cols]):
                 
                 if(metadata[4] == "avi"):
-                    st.write(vid)
                     vid = avi_to_mp4_temp(vid)
                 
                 col.video(
