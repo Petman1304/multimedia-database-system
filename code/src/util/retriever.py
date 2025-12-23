@@ -219,14 +219,13 @@ INNER JOIN keyframe_features on video_keyframes.keyframe_id = keyframe_features.
 
             fn = row[0]
             size = row[2]
-            w = row[4]
-            h = row[5]
-            ch = row[6]
-            ext = row[7]
+            dur = row[4]
+            fps = row[5]
+            ext = row[6]
 
             label = row[3]
 
-            metadata = (fn, size, w, h, ch, ext)
+            metadata = (fn, size, dur, fps, ext)
 
 
             videos.append((id, dist, img, metadata, label))
