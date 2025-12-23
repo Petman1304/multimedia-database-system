@@ -76,18 +76,18 @@ if uploaded:
 if st.button("Search"):
     start_time = time.perf_counter()
 
-    filtered_img = retriever.video_metadata_filter(max_size*1024, min_fps, max_fps, min_dur, max_dur, ext)
-    filtered_img = [row[0] for row in filtered_img]
+    filtered_vid = retriever.video_metadata_filter(max_size*1024, min_fps, max_fps, min_dur, max_dur, ext)
+    filtered_vid = [row[0] for row in filtered_vid]
 
     if query is None:
-        results = [(id, 0.) for id in filtered_img]
+        results = [(id, 0.) for id in filtered_vid]
         results = results[:top_k]
     else:
-        results = retriever.image_similarity_search(query, search_method=search_method, top_k=top_k)
-        results = [(id, dist) for id, dist in results if id in filtered_img]
+        results = retriever.video_similarity_search(query, search_method=search_method, top_k=top_k)
+        results = [(id, dist) for id, dist in results if id in filtered_vid]
         results = results
     
-    results = retriever.fetch_image_from_db(results)
+    results = retriever.fetch_video_from_db(results)
 
     end_time = time.perf_counter()
     q_time = end_time - start_time
@@ -96,17 +96,16 @@ if st.button("Search"):
     st.write(f"Query time : {q_time:.4f} s")
 
     if len(results) == 0:
-        st.write("No images match your query.")
+        st.write("No video match your query.")
     else:
         n_cols = 3 
 
         for i in range(0, len(results), n_cols):
             cols = st.columns(n_cols)
-            for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
-                col.image(
-                    img,
+            for col, (id, dist, vid, metadata, label) in zip(cols, results[i:i+n_cols]):
+                col.video(
+                    vid,
                     caption=f"Similarity Score= {dist:.4f}",
-                    channels="BGR",
                     width="stretch"
                 )
                 with col.expander("Metadata"):
