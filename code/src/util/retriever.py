@@ -110,8 +110,7 @@ WHERE 1=1
         params.append(max_size)
 
         self.cursor.execute(db_q, params)
-        result = self.cursor.fetchall()
-        return result
+        return self.cursor.fetchall()
 
 
     def euclidean_dist(self, base, target):
