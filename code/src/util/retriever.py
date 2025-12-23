@@ -57,7 +57,7 @@ class Retriever:
                 INNER JOIN
                     image_metadata ON media.media_id = image_metadata.media_id
                 WHERE 
-                    media_id = ?
+                    media.media_id = ?
                 """,
                 (id, )
             )
