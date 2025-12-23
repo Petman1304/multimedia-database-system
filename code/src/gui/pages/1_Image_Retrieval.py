@@ -43,7 +43,7 @@ with st.popover("Advanced Query"):
         default="Euclidean Distance"
     )
     if search_method == None:
-        st.caption("Please select a method")
+        st.warning("Please select a method")
 
     top_k = st.slider("Top K", 1, 10, 5)
 
