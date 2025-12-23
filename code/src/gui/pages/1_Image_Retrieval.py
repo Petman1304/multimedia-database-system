@@ -88,7 +88,7 @@ if uploaded:
                 for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
                     col.image(
                         img,
-                        caption=f"Similarity Score= {dist}",
+                        caption=f"Similarity Score= {dist:.4f}",
                         channels="BGR",
                         width="stretch"
                     )
