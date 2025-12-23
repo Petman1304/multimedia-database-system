@@ -13,7 +13,7 @@ class Retriever:
         self.cursor = db.cursor()
         self.base_dir = base_dir
 
-    def image_similarity_search(self, query, search_method="Euclidean Distance", top_k=5):
+    def image_similarity_search(self, query, search_method="Euclidean Distance"):
         try:
             vector_db = self.cursor.execute(
                 "SELECT media_id, image_vector FROM image_features"
@@ -43,9 +43,7 @@ class Retriever:
         
         distances.sort(key=lambda x: x[1], reverse=True)
 
-        print(distances[:top_k])
-
-        return distances[:top_k]
+        return distances
 
     def fetch_image_from_db(self, search_result):
         cursor = self.cursor
@@ -89,6 +87,31 @@ class Retriever:
 
             images.append((id, dist, img, metadata, label))
         return images
+    
+    def image_metadata_filter(self, max_size, min_w, max_w, min_h, max_h, ext):
+        db_q = """
+SELECT media.media_id
+FROM media
+INNER JOIN image_metadata ON media.media_id = image_metadata.media_id
+WHERE 1=1
+"""     
+        params = []
+        if ext:
+            e = ",".join("?" for _ in ext)
+            db_q += f"AND image_metadata.extension IN ({e})"
+
+
+        db_q += "AND image_metadata.width BETWEEN ? AND ?"
+        params.append([min_w, max_w])
+        db_q += "AND image_metadata.height BETWEEN ? AND ?"
+        params.append([min_h, max_h])
+        db_q += "AND media.size <= ?"
+        params.append(max_size)
+
+        self.cursor.execute(db_q, params)
+        result = self.cursor.fetchall()
+        return result
+
 
     def euclidean_dist(self, base, target):
         return math.dist(base, target)
