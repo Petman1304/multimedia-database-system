@@ -185,6 +185,6 @@ WHERE 1=1
     
     def knn_search(self, knn, m_id, query, top_k):
         query = query.reshape(1, -1)
-        dist, idx = knn.kneighbors(query, n_neighbor=top_k)
+        dist, idx = knn.kneighbors(query, n_neighbors=top_k)
 
         return ((m_id[i], dist) for i, dist in zip(idx[0], dist[0]))
