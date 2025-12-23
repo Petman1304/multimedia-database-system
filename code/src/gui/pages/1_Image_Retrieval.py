@@ -86,17 +86,14 @@ if uploaded:
             for col, (id, dist, img, metadata, label) in zip(cols, results[i:i+n_cols]):
                 col.image(
                     img,
-                    caption=image_caption(
-                        id, 
-                        dist, 
-                        metadata[0], 
-                        metadata[1], 
-                        metadata[2], 
-                        metadata[3], 
-                        metadata[4], 
-                        metadata[5]
-                    ),
                     channels="BGR",
                     width="stretch"
                 )
+                with st.expander("Metadata"):
+                    st.write(
+                        image_caption(
+                        id, 
+                        dist, 
+                        *metadata
+                    ))
                 
