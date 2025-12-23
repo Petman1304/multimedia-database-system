@@ -94,6 +94,7 @@ if st.button("Search"):
 
     filtered_vid = retriever.video_metadata_filter(max_size*1024, min_fps, max_fps, min_dur, max_dur, ext)
     filtered_vid = [row[0] for row in filtered_vid]
+    st.write(filtered_vid)
 
     if query is None:
         results = [(id, 0.) for id in filtered_vid]
