@@ -34,14 +34,15 @@ class Retriever:
         
         if search_method == "Euclidean Distance":
             for idx, v in vector_db:
-                distances.append((idx, self.euclidean_dist(q_v, v)))
+                distances.append((idx, 1 - self.euclidean_dist(q_v, v)))
 
-            distances.sort(key=lambda x: x[1], reverse=False)
         elif search_method == "Cosine Similarity":
             for idx, v in vector_db:
                 distances.append((idx, self.cosine_similarity(q_v, v)))
 
-            distances.sort(key=lambda x: x[1], reverse=True)
+        
+        distances.sort(key=lambda x: x[1], reverse=True)
+
         print(distances[:top_k])
 
         return distances[:top_k]
