@@ -12,6 +12,7 @@ class Retriever:
         self.db = db
         self.cursor = db.cursor()
         self.base_dir = base_dir
+        self.image_knn = self.build_image_knn()
 
     def build_image_knn(self):
         self.cursor.execute(
@@ -62,7 +63,7 @@ FROM image_features
                 distances.append((idx, self.cosine_similarity(q_v, v)))
         
         else:
-            knn = self.build_image_knn()
+            knn = self.image_knn
 
             m_id = []
             for idx, v in vector_db:
