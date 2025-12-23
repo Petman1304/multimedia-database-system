@@ -52,14 +52,14 @@ class Retriever:
                     image_metadata.width, image_metadata.height, image_metadata.channels, image_metadata.extension
                 FROM 
                     media 
-                WHERE 
-                    media_id = ?
                 INNER JOIN 
                     image ON media.media_id = image.media_id
                 INNER JOIN
                     image_metadata ON media.media_id = image_metadata.media_id
+                WHERE 
+                    media_id = ?
                 """,
-                (id)
+                (id, )
             )
 
             row = cursor.fetchone()
