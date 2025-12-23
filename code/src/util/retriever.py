@@ -1,4 +1,4 @@
-from feature_extraction import *
+from util.feature_extraction import *
 from pathlib import Path
 from sklearn.neighbors import NearestNeighbors
 import sqlite3
@@ -124,6 +124,31 @@ FROM image_features
 SELECT media.media_id
 FROM media
 INNER JOIN image_metadata ON media.media_id = image_metadata.media_id
+WHERE 1=1
+"""     
+        params = []
+        if ext:
+            e = ",".join("?" for _ in ext)
+            db_q += f"AND image_metadata.extension IN ({e})"
+
+        params.extend(ext)
+
+        db_q += "AND image_metadata.width BETWEEN ? AND ?"
+        params.extend([min_w, max_w])
+        db_q += "AND image_metadata.height BETWEEN ? AND ?"
+        params.extend([min_h, max_h])
+        db_q += "AND media.size <= ?"
+        params.append(max_size)
+
+        self.cursor.execute(db_q, params)
+        result = self.cursor.fetchall()
+        return result
+    
+    def video_metadata_filter(self, max_size, min_fps, max_fps, min_dur, max_dur, ext):
+        db_q = """
+SELECT media.media_id
+FROM media
+INNER JOIN video_metadata ON media.media_id = video_metadata.media_id
 WHERE 1=1
 """     
         params = []
