@@ -121,6 +121,7 @@ if st.button("Search"):
             for col, (id, dist, vid, metadata, label) in zip(cols, results[i:i+n_cols]):
                 
                 if(metadata[4] == "avi"):
+                    st.write(vid)
                     vid = avi_to_mp4_temp(vid)
                 
                 col.video(
