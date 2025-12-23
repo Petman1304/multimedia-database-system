@@ -158,10 +158,10 @@ WHERE 1=1
 
         params.extend(ext)
 
-        db_q += "AND image_metadata.width BETWEEN ? AND ?"
-        params.extend([min_w, max_w])
-        db_q += "AND image_metadata.height BETWEEN ? AND ?"
-        params.extend([min_h, max_h])
+        db_q += "AND video_metadata.fps BETWEEN ? AND ?"
+        params.extend([min_fps, max_fps])
+        db_q += "AND video_metadata.duration BETWEEN ? AND ?"
+        params.extend([min_dur, max_dur])
         db_q += "AND media.size <= ?"
         params.append(max_size)
 
@@ -187,4 +187,4 @@ WHERE 1=1
         query = query.reshape(1, -1)
         dist, idx = knn.kneighbors(query, n_neighbors=top_k)
 
-        return ((m_id[i], dist) for i, dist in zip(idx[0], dist[0]))
+        return list((m_id[i], dist) for i, dist in zip(idx[0], dist[0]))
