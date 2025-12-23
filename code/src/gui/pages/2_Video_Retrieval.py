@@ -105,9 +105,9 @@ if st.button("Search"):
             for col, (id, dist, vid, metadata, label) in zip(cols, results[i:i+n_cols]):
                 col.video(
                     vid,
-                    caption=f"Similarity Score= {dist:.4f}",
                     width="stretch"
                 )
+                col.caption(f"Similarity Score= {dist:.4f}")
                 with col.expander("Metadata"):
                     st.write(
                         video_caption( *metadata)
