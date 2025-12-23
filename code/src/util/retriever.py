@@ -267,7 +267,7 @@ WHERE 1=1
         params = []
         if ext:
             e = ",".join("?" for _ in ext)
-            db_q += f"AND image_metadata.extension IN ({e})"
+            db_q += f"AND video_metadata.extension IN ({e})"
 
         params.extend(ext)
 
